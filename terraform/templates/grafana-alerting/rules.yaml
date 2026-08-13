@@ -1,0 +1,47 @@
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: demo-app-resource-alerts
+    folder: EKS Platform Task
+    interval: 1m
+    rules:
+      - uid: demo-app-high-cpu
+        title: Demo app high CPU
+        condition: C
+        for: 5m
+        data:
+          - refId: A
+            relativeTimeRange: { from: 600, to: 0 }
+            datasourceUid: prometheus
+            model:
+              expr: sum(rate(container_cpu_usage_seconds_total{namespace="demo",pod=~"demo-app-.*",container!=""}[5m])) / sum(kube_pod_container_resource_limits{namespace="demo",pod=~"demo-app-.*",resource="cpu"}) * 100
+              instant: true
+              refId: A
+          - refId: C
+            relativeTimeRange: { from: 0, to: 0 }
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              expression: A
+              refId: C
+              conditions: [{ type: query, reducer: { type: last, params: [] }, evaluator: { type: gt, params: [80] }, operator: { type: and } }]
+      - uid: demo-app-high-memory
+        title: Demo app high memory
+        condition: C
+        for: 5m
+        data:
+          - refId: A
+            relativeTimeRange: { from: 600, to: 0 }
+            datasourceUid: prometheus
+            model:
+              expr: sum(container_memory_working_set_bytes{namespace="demo",pod=~"demo-app-.*",container!=""}) / sum(kube_pod_container_resource_limits{namespace="demo",pod=~"demo-app-.*",resource="memory"}) * 100
+              instant: true
+              refId: A
+          - refId: C
+            relativeTimeRange: { from: 0, to: 0 }
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              expression: A
+              refId: C
+              conditions: [{ type: query, reducer: { type: last, params: [] }, evaluator: { type: gt, params: [80] }, operator: { type: and } }]

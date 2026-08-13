@@ -1,0 +1,38 @@
+grafana:
+  adminPassword: ${grafana_admin_password}
+  service: { type: ClusterIP }
+  sidecar:
+    dashboards: { enabled: true, searchNamespace: ALL }
+    datasources: { enabled: true, searchNamespace: ALL }
+  extraConfigmapMounts:
+    - name: grafana-alerting
+      mountPath: /etc/grafana/provisioning/alerting
+      configMap: grafana-alerting
+      readOnly: true
+  envFromSecret: grafana-slack
+prometheus:
+  prometheusSpec:
+    retention: 3d
+    resources: { requests: { cpu: 300m, memory: 1Gi }, limits: { memory: 2Gi } }
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    additionalScrapeConfigs:
+      - job_name: demo-app
+        kubernetes_sd_configs: [{ role: pod }]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_namespace]
+            action: keep
+            regex: demo
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: "true"
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            target_label: __address__
+            regex: (.+):(?:\\d+);(\\d+)
+            replacement: $$1:$$2
+alertmanager: { enabled: false }

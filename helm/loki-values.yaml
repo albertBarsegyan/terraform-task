@@ -1,0 +1,12 @@
+deploymentMode: SingleBinary
+loki:
+  auth_enabled: false
+  commonConfig: { replication_factor: 1 }
+  storage: { type: filesystem }
+singleBinary:
+  replicas: 1
+  resources: { requests: { cpu: 100m, memory: 256Mi }, limits: { memory: 512Mi } }
+gateway: { enabled: true }
+write: { replicas: 0 }
+read: { replicas: 0 }
+backend: { replicas: 0 }

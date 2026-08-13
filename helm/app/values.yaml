@@ -1,0 +1,11 @@
+replicaCount: 2
+image:
+  repository: ghcr.io/your-org/eks-platform-demo
+  tag: latest
+  pullPolicy: IfNotPresent
+serviceAccount: { create: true, name: "" }
+service: { port: 3000 }
+resources:
+  requests: { cpu: 100m, memory: 128Mi }
+  limits: { cpu: 500m, memory: 256Mi }
+ingress: { enabled: true, className: alb, host: "", annotations: {} }

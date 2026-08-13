@@ -1,0 +1,15 @@
+{
+  "uid": "eks-platform-demo", "title": "EKS Platform Demo Application", "schemaVersion": 39, "version": 1,
+  "templating": {"list": [{"name":"namespace","type":"constant","query":"demo","current":{"text":"demo","value":"demo"}}]},
+  "panels": [
+    {"id":1,"title":"Request rate","type":"timeseries","datasource":{"type":"prometheus","uid":"prometheus"},"targets":[{"expr":"sum(rate(app_http_requests_total{namespace=\"$namespace\"}[5m]))","legendFormat":"requests/s"}]},
+    {"id":2,"title":"Error rate","type":"timeseries","datasource":{"type":"prometheus","uid":"prometheus"},"targets":[{"expr":"sum(rate(app_http_requests_total{namespace=\"$namespace\",status_code=~\"5..\"}[5m])) / sum(rate(app_http_requests_total{namespace=\"$namespace\"}[5m])) * 100","legendFormat":"error %"}]},
+    {"id":3,"title":"Application CPU","type":"timeseries","datasource":{"type":"prometheus","uid":"prometheus"},"targets":[{"expr":"sum(rate(container_cpu_usage_seconds_total{namespace=\"$namespace\",pod=~\"demo-app-.*\",container!=\"\"}[5m]))","legendFormat":"cores"}]},
+    {"id":4,"title":"Application memory","type":"timeseries","datasource":{"type":"prometheus","uid":"prometheus"},"targets":[{"expr":"sum(container_memory_working_set_bytes{namespace=\"$namespace\",pod=~\"demo-app-.*\",container!=\"\"})","legendFormat":"bytes"}]},
+    {"id":5,"title":"Ready pods","type":"stat","datasource":{"type":"prometheus","uid":"prometheus"},"targets":[{"expr":"sum(kube_deployment_status_replicas_available{namespace=\"$namespace\",deployment=\"demo-app\"})"}]},
+    {"id":6,"title":"Pod restarts","type":"timeseries","datasource":{"type":"prometheus","uid":"prometheus"},"targets":[{"expr":"sum(kube_pod_container_status_restarts_total{namespace=\"$namespace\",pod=~\"demo-app-.*\"})","legendFormat":"restarts"}]},
+    {"id":7,"title":"Node CPU","type":"timeseries","datasource":{"type":"prometheus","uid":"prometheus"},"targets":[{"expr":"avg(1 - rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100","legendFormat":"cpu %"}]},
+    {"id":8,"title":"Node memory","type":"timeseries","datasource":{"type":"prometheus","uid":"prometheus"},"targets":[{"expr":"avg(1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100","legendFormat":"memory %"}]},
+    {"id":9,"title":"Application logs","type":"logs","datasource":{"type":"loki","uid":"loki"},"targets":[{"expr":"{namespace=\"$namespace\",app=\"demo-app\"}"}]}
+  ]
+}

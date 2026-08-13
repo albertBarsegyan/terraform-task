@@ -1,0 +1,20 @@
+replicaCount: 2
+image:
+  repository: ${image_repository}
+  tag: ${image_tag}
+resources:
+  requests: { cpu: 100m, memory: 128Mi }
+  limits: { cpu: 500m, memory: 256Mi }
+ingress:
+  enabled: true
+  className: alb
+  host: ${host}
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}${enable_https ? ", {\\"HTTPS\\":443}" : ""}]'
+    %{ if enable_https ~}
+    alb.ingress.kubernetes.io/certificate-arn: ${certificate_arn}
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    %{ endif ~}

@@ -1,0 +1,9 @@
+aws_region = "eu-central-1"
+cluster_name = "eks-platform-task"
+kubernetes_version = "1.30"
+app_image_repository = "ghcr.io/your-org/eks-platform-demo"
+app_image_tag = "1.0.0"
+# Optional host rule for DNS managed outside this Terraform configuration.
+domain_name = ""
+slack_webhook_url = ""
+grafana_admin_password = ""
