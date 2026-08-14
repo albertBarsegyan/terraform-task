@@ -1,4 +1,7 @@
 aws_region = "eu-central-1"
+# Keep real values only in the ignored terraform.tfvars file; never commit them.
+# aws_access_key = "AKIA..."
+# aws_secret_key = "..."
 cluster_name = "eks-platform-task"
 kubernetes_version = "1.30"
 app_image_repository = "ghcr.io/your-org/eks-platform-demo"

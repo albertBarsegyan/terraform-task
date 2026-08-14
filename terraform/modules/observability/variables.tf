@@ -1,9 +1,9 @@
 variable "grafana_admin_password" {
-  type = string
+  type      = string
   sensitive = true
 }
 variable "slack_webhook_url" {
-  type = string
+  type      = string
   sensitive = true
 }
 variable "prometheus_values_file" { type = string }
