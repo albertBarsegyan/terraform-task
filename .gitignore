@@ -22,3 +22,4 @@ secrets
 terraform.tfstate
 terraform.tfstate.*
 policy.json
+INTERVIEW_GUIDE.md

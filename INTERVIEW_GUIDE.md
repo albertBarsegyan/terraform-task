@@ -26,7 +26,7 @@ Internet-facing Application Load Balancer
    |  created from Kubernetes Ingress by AWS Load Balancer Controller
    v
 EKS cluster in a two-AZ VPC
-   |-- public subnets: ALB
+   |-- public subnets: ALB-
    |-- private subnets: EKS managed node group (exactly 2 Spot nodes)
           |
           +--> demo namespace
