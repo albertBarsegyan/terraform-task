@@ -42,6 +42,8 @@ resource "helm_release" "loki" {
   chart      = "loki"
   version    = "6.16.0"
   values     = [file(var.loki_values_file)]
+  timeout    = 900
+  wait       = true
 }
 resource "helm_release" "alloy" {
   name       = "alloy"

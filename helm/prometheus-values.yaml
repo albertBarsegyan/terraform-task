@@ -13,7 +13,7 @@ grafana:
 prometheus:
   prometheusSpec:
     retention: 3d
-    resources: { requests: { cpu: 300m, memory: 1Gi }, limits: { memory: 2Gi } }
+    resources: { requests: { cpu: 100m, memory: 256Mi }, limits: { memory: 512Mi } }
     serviceMonitorSelectorNilUsesHelmValues: false
     podMonitorSelectorNilUsesHelmValues: false
     additionalScrapeConfigs:

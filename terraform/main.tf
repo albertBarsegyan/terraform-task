@@ -17,9 +17,12 @@ module "eks" {
 }
 
 module "eks_addons" {
-  source       = "./modules/eks-addons"
-  cluster_name = module.eks.cluster_name
-  depends_on   = [module.eks]
+  source = "./modules/eks-addons"
+
+  cluster_name     = module.eks.cluster_name
+  ebs_csi_role_arn = module.ebs_csi_irsa_role.iam_role_arn
+
+  depends_on = [module.eks, module.ebs_csi_irsa_role]
 }
 
 module "alb_controller" {

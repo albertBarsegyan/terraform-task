@@ -2,10 +2,28 @@ deploymentMode: SingleBinary
 loki:
   auth_enabled: false
   commonConfig: { replication_factor: 1 }
+  schemaConfig:
+    configs:
+      - from: "2024-04-01"
+        store: tsdb
+        object_store: filesystem
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
   storage: { type: filesystem }
 singleBinary:
   replicas: 1
-  resources: { requests: { cpu: 100m, memory: 256Mi }, limits: { memory: 512Mi } }
+  persistence:
+    enabled: true
+    storageClass: gp3
+    size: 10Gi
+  resources: { requests: { cpu: 50m, memory: 128Mi }, limits: { memory: 256Mi } }
+# Disable memcached caches to keep observability footprint modest on Spot nodes.
+chunksCache: { enabled: false }
+resultsCache: { enabled: false }
+lokiCanary: { enabled: false }
+test: { enabled: false }
 gateway: { enabled: true }
 write: { replicas: 0 }
 read: { replicas: 0 }

@@ -21,3 +21,4 @@ secrets
 .terraform/
 terraform.tfstate
 terraform.tfstate.*
+policy.json

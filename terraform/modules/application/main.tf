@@ -3,6 +3,7 @@ resource "helm_release" "this" {
   namespace        = "demo"
   create_namespace = true
   chart            = var.chart_path
+  timeout          = 600
   values = [templatefile(var.values_file, {
     image_repository = var.image_repository
     image_tag        = var.image_tag
